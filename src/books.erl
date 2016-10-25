@@ -1,15 +1,18 @@
 -module(books).
+-export([main/1]).
 -include("src/options.hrl").
-% -export([main/1]).
--compile(export_all).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main
 
 main([]) -> print_usage();
 main(Options) ->
   SearchOptions = optparse(Options),
-  books_service:start("https://www.googleapis.com/books/v1/volumes?q="),
-  BookList = books_service:search_books(SearchOptions),
+  books_repository:start("https://www.googleapis.com/books/v1/volumes?q="),
+  BookList = books_repository:search_books(SearchOptions),
   print_books(BookList).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % print_books(BookList) ->
 %   lists:foreach(fun print_book/1, BookList).
 

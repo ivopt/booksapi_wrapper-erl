@@ -1,4 +1,4 @@
--module(books_service).
+-module(books_repository).
 -behaviour(gen_server).
 -include("src/options.hrl").
 
@@ -6,20 +6,17 @@
 -define(mget(Key, Map), maps:get(list_to_binary(Key), Map)).
 -define(mget(Key, Map, Default), maps:get(list_to_binary(Key), Map, Default)).
 
-% -define(pipe(Base, ListOfFunctions), ).
-
--compile(export_all).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Books Service API headers
-% -export([start/1, search_books/1]).
+%% Books repository API headers
+-export([start/1, search_books/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% GEN_SERVER API headers
-% -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Books Service API implementation
+%% Books repository API implementation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Actor starting point
@@ -88,7 +85,10 @@ search(#options{free_term=Term, author=Author, title=Title}, Template) ->
 %% Helpers
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dactylize_url(URL) ->
-  {ok, Template} = dactyl:compile(URL ++ "~term~;~has_author~?+inauthor:~author~;~:~;~has_title~?+intitle:~title~;~:~;"),
+  TermPartial   = "~term~;",
+  AuthorPartial = "~has_author~?+inauthor:~author~;~:~;",
+  TitlePartial  = "~has_title~?+intitle:~title~;~:~;",
+  {ok, Template} = dactyl:compile(URL ++ TermPartial ++ AuthorPartial ++ TitlePartial),
   Template.
 
 encode(Term) when is_atom(Term) -> "";
