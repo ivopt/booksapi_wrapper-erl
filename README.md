@@ -38,7 +38,11 @@ $ ./books -a Tolkien
 
 # Building
 
-To build the app, be sure to have **rebar** (2) laying around (I have it on my home /bin folder which is on my path).
+To build the app, be sure to have **rebar 2** laying around (I have it on my home /bin folder which is on my path).
+
+**NOTE:** Yes, I know rebar 2 is (sort of) deprecated and people should be using rebar 3 but since I'll be
+maintaining a few rebar 2 apps, I used this opportunity to learn a bit about it.
+
 After making sure you have rebar laying around on your path, you need to install all dependencies:
 
 ```
