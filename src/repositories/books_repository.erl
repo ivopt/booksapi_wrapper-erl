@@ -37,8 +37,12 @@ search_books(SearchTerm) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 init(State) ->
+  process_flag(trap_exit, true),
   hackney:start(),
   {ok, State}.
+
+terminate(_,_) ->
+  ok.
 
 handle_call(Msg, _From, State) ->
   case Msg of
@@ -49,15 +53,11 @@ handle_call(Msg, _From, State) ->
   end,
   {reply, Response, State}.
 
-handle_cast(_,_) -> todo.
+handle_cast(_,_) -> {noreply, todo, todo}.
 
 handle_info(_Msg, State) ->
   io:format("Unexpected"),
   {noreply, State}.
-
-terminate(_,_) ->
-  io:format("Terminated!"),
-  ok.
 
 code_change(_,_,_) -> ok.
 
