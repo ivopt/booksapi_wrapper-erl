@@ -2,10 +2,7 @@
 -include("src/options.hrl").
 -import(book_util, [join/2]).
 
--export([start/0, stop/0, run/1]).
-
-start() -> application:start(books).
-stop() -> application:stop(books).
+-export([run/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Run
@@ -13,7 +10,7 @@ stop() -> application:stop(books).
 run([]) -> print_usage();
 run(Options) ->
   SearchOptions = optparse(Options),
-  BookList = books_repository:search_books(SearchOptions),
+  BookList = books:search(SearchOptions),
   print_books(BookList).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -26,9 +23,9 @@ print_books([Book| BookList], Idx) ->
   print_books(BookList, Idx + 1).
 
 print_book(Index, {Title, Date, Authors}) ->
-  io:format("~p) Title: ~s~n", [Index, Title]),
-  io:format("   Date: ~s~n", [Date]),
-  io:format("   Authors: ~s~n~n", [join(", ", Authors)]).
+  io:format("~p) Title: ~s~n"
+            "   Date: ~s~n"
+            "   Authors: ~s~n~n", [Index, Title, Date, join(", ", Authors)]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optparse

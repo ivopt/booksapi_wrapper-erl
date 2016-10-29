@@ -1,9 +1,35 @@
 -module(books).
--export([main/1]).
+-behaviour(application).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Main
+% OTP application behaviour API
+-export([start/2, stop/1]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Client application API
+-export([start/0, stop/0, search/1]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Escriptize main function
+-export([main/1]).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% OTP application behaviour API implementation
+start(_Type, _Args) -> books_sup:start_link().
+stop(_) -> ok.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Client application API implementation
+start() -> application:start(books).
+stop()  -> application:stop(books).
+
+search(Options) -> books_repository:search_books(Options).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Escriptize main function implementation
 main(Args) ->
-  books_cli:start(),
+  start(),
   books_cli:run(Args),
-  books_cli:stop().
+  stop().
