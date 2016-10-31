@@ -99,6 +99,41 @@ Examples:
   $ "./books" -a 'Douglas Adams' Hitchhiker   # search for books written by Douglas Adams and that include the word 'Hitchhiker'
 ```
 
+# Development
+
+For the test environment, there is a `rebar.config.script` file that will inject a few config details.
+This works by setting the ENV variable `RUNENV=test`.
+
+All tasks should be executed through `make` (and using the provided `Makefile`) as it accounts for the `RUNENV` detail.
+
+## Setting up
+
+The very first thing to do before running the tests is to install test dependencies.
+To do so, run:
+
+```
+$ make test-get-deps
+```
+
+This will install all regular dependencies and also the test ones.
+
+## Running the tests
+
+There are 2 ways to run the tests: With code coverage report or without it.
+Code coverage is not the best metric ever but can be helpfull when you are refactoring tests or covering non-tested libs/apps with tests.
+
+So, to run tests with coverage reports simply:
+
+```
+$ make test-cover
+```
+
+to run without coverage report (which is also way faster):
+
+```
+$ make test
+```
+
 # Disclaimer
 
 This is my very first CLI app in Erlang, I am in no manner an Erlang expert or something like that.
