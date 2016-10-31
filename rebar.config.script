@@ -1,0 +1,30 @@
+SetDebugInfo = fun(Config) ->
+  case lists:keyfind(erl_opts, 1, Config) of
+    {erl_opts, Opts} ->
+      NOpts = lists:delete(no_debug_info, Opts),
+      lists:keyreplace(erl_opts, 1, Config, {erl_opts, [debug_info|NOpts]});
+    false ->
+      [{erl_opts, [debug_info]} | Config]
+  end
+end,
+
+SetTestDependencies = fun(Config) ->
+  TestDeps = [
+    % TODO - add test deps here!
+    {teal, ".*", {git, "git@github.com:Stratus3D/teal.git"}}
+  ],
+  case lists:keyfind(deps, 1, Config) of
+    {deps, DepList} ->
+      lists:keyreplace(deps, 1, Config, {deps, lists:merge(DepList, TestDeps)});
+    false ->
+      [{deps, TestDeps} | Config]
+  end
+end,
+
+Config = case os:getenv("RUNENV") of
+  "test" -> SetTestDependencies(
+            SetDebugInfo(CONFIG));
+  _      -> CONFIG
+end,
+
+Config.

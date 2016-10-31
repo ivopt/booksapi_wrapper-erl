@@ -3,3 +3,5 @@ ebin
 .rebar
 .vscode
 books
+spec/spec_out
+spec/*/*.beam

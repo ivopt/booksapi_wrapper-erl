@@ -1,0 +1,2 @@
+{export, "./spec/spec_out/coverDB"}.
+{incl_dirs_r, ["../ebin", "../deps"]}.

@@ -1,0 +1,3 @@
+{logdir, "./spec_out"}.
+
+{suites, "book_util", all}.
