@@ -7,16 +7,21 @@ escriptize: compile
 clean:
 	@rebar clean
 
-clean-ct:
-	@rm -fr spec/spec_out/*
-
-test: clean
-	@RUNENV=test rebar compile
-	@RUNENV=test ct_run -spec spec/spec -logdir spec/spec_out -pa ./ebin -pa ./deps/*/ebin
-
-test-cover: clean
-	@RUNENV=test rebar compile
-	@RUNENV=test ct_run -spec spec/spec -cover spec/coverspec -logdir spec/spec_out -pa ./ebin -pa ./deps/*/ebin
-
 test-get-deps:
 	@RUNENV=test rebar get-deps
+
+eunit:
+	@RUNENV=test rebar eunit
+
+ct: clean
+	@RUNENV=test rebar compile
+	@RUNENV=test ct_run -spec test/ct/spec -logdir test/ct/spec_out -pa ./ebin -pa ./deps/*/ebin
+
+ct-cover: clean
+	@RUNENV=test rebar compile
+	@RUNENV=test ct_run -spec test/ct/spec -cover test/ct/coverspec -logdir test/ct/spec_out -pa ./ebin -pa ./deps/*/ebin
+
+ct-clean:
+	@rm -fr test/ct/spec_out/*
+
+test-all: ct eunit

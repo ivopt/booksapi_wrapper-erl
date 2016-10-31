@@ -119,20 +119,42 @@ This will install all regular dependencies and also the test ones.
 
 ## Running the tests
 
+### EUnit
+
+To run the EUnit tests simply run:
+
+```
+$ make eunit
+```
+
+this is just a shortcut for `RUNENV=test rebar eunit`.
+
+### Common Test
+
 There are 2 ways to run the tests: With code coverage report or without it.
 Code coverage is not the best metric ever but can be helpfull when you are refactoring tests or covering non-tested libs/apps with tests.
 
 So, to run tests with coverage reports simply:
 
 ```
-$ make test-cover
+$ make ct-cover
 ```
 
 to run without coverage report (which is also way faster):
 
 ```
-$ make test
+$ make ct
 ```
+
+### Running All tests
+
+You can (and should) also run all tests at once. To do so, run:
+
+```
+$ make test-all
+```
+
+This will run both ct tests and eunit tests.
 
 # Disclaimer
 

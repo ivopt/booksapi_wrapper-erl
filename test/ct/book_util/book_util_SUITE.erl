@@ -73,8 +73,7 @@ list_as_string_blows_up_if_argument_not_a_list(_) ->
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Join tests
-
+%% join tests
 join_empty_list_just_returns_empty_string(_Config) ->
   "" = book_util:join("", []).
 

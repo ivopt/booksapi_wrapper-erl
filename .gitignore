@@ -2,6 +2,7 @@ deps
 ebin
 .rebar
 .vscode
+.eunit
 books
-spec/spec_out
-spec/*/*.beam
+test/ct/spec_out
+test/ct/*/*.beam
