@@ -31,5 +31,6 @@ search(Options) -> books_repository:search_books(Options).
 % Escriptize main function implementation
 main(Args) ->
   start(),
-  books_cli:run(Args),
+  Response = books_cli:run(Args, {?MODULE}),
+  io:format(Response),
   stop().

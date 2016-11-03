@@ -1,4 +1,4 @@
--module(book_util).
+-module(books_util).
 -export([join/2, list_as_string/1, to_list/1]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
