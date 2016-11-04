@@ -11,8 +11,8 @@ end,
 SetTestDependencies = fun(Config) ->
   TestDeps = [
     % TODO - add test deps here!
-    {teal, ".*", {git, "git@github.com:Stratus3D/teal.git"}},
-    {meck, ".*", {git, "git@github.com:eproxus/meck.git"}}
+    {teal, ".*", {git, "https://github.com/Stratus3D/teal.git"}},
+    {meck, ".*", {git, "https://github.com/eproxus/meck.git"}}
   ],
   case lists:keyfind(deps, 1, Config) of
     {deps, DepList} ->
