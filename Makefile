@@ -1,24 +1,26 @@
+REBAR ?= "$(PWD)/bin/rebar"
+
 compile:
-	@rebar compile
+	@$(REBAR) compile
 
 escriptize: compile
-	@rebar escriptize
+	@$(REBAR) escriptize
 
 clean:
-	@rebar clean
+	@$(REBAR) clean
 
 test-get-deps:
-	@RUNENV=test rebar get-deps
+	@RUNENV=test $(REBAR) get-deps
 
 eunit:
-	@RUNENV=test rebar eunit
+	@RUNENV=test $(REBAR) eunit
 
 ct: clean
-	@RUNENV=test rebar compile
+	@RUNENV=test $(REBAR) compile
 	@RUNENV=test ct_run -spec test/ct/spec -logdir test/ct/spec_out -pa ./ebin -pa ./deps/*/ebin
 
 ct-cover: clean
-	@RUNENV=test rebar compile
+	@RUNENV=test $(REBAR) compile
 	@RUNENV=test ct_run -spec test/ct/spec -cover test/ct/coverspec -logdir test/ct/spec_out -pa ./ebin -pa ./deps/*/ebin
 
 ct-clean:

@@ -1,0 +1,14 @@
+language: erlang
+
+otp_release:
+  - 18.0
+
+sudo: false
+
+script:
+  - make test-get-deps
+  - make test-all
+
+notifications:
+  recipients:
+    - ivo.jesus@gmail.com
