@@ -38,22 +38,21 @@ search_books(SearchTerm) ->
 
 init(State) ->
   process_flag(trap_exit, true),
-  hackney:start(),
   {ok, State}.
 
 terminate(_,_) ->
   ok.
 
-handle_call(Msg, _From, State) ->
+handle_call(Msg, _From, State = #{url:=Url}) ->
   case Msg of
     {search, SearchTerm} ->
-      Response = search(SearchTerm, maps:get(url, State));
+      Response = search(SearchTerm, Url);
     _ ->
       Response = nothing
   end,
   {reply, Response, State}.
 
-handle_cast(_,_) -> {noreply, todo, todo}.
+handle_cast(_, State) -> {noreply, State}.
 
 handle_info(_Msg, State) ->
   io:format("Unexpected"),
@@ -91,7 +90,7 @@ dactylize_url(URL) ->
   {ok, Template} = dactyl:compile(URL ++ TermPartial ++ AuthorPartial ++ TitlePartial),
   Template.
 
-encode(Term) when is_atom(Term) -> "";
+encode(none) -> "";
 encode(Term) when is_list(Term) -> http_uri:encode(Term).
 
 get_volumes(ItemMap) ->
@@ -99,7 +98,7 @@ get_volumes(ItemMap) ->
   [ get_volume_details(?mget("volumeInfo",X)) || X <- Items].
 
 get_volume_details(Volume) ->
-  Title   = ?mget("title", Volume),
+  Title   = ?mget("title", Volume, ""),
   Date    = ?mget("publishedDate", Volume, ""),
-  Authors = ?mget("authors", Volume),
+  Authors = ?mget("authors", Volume, []),
   {Title, Date, Authors}.

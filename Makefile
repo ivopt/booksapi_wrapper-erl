@@ -9,21 +9,25 @@ escriptize: compile
 clean:
 	@$(REBAR) clean
 
+test-shell:
+	@RUNENV=test $(REBAR) shell
+
 test-get-deps:
 	@RUNENV=test $(REBAR) get-deps
+
+test-compile:
+	@RUNENV=test $(REBAR) compile
 
 eunit:
 	@RUNENV=test $(REBAR) eunit
 
-ct: clean
-	@RUNENV=test $(REBAR) compile
+ct:
 	@RUNENV=test ct_run -spec test/ct/spec -logdir test/ct/spec_out -pa ./ebin -pa ./deps/*/ebin
 
-ct-cover: clean
-	@RUNENV=test $(REBAR) compile
+ct-cover:
 	@RUNENV=test ct_run -spec test/ct/spec -cover test/ct/coverspec -logdir test/ct/spec_out -pa ./ebin -pa ./deps/*/ebin
 
 ct-clean:
 	@rm -fr test/ct/spec_out/*
 
-test-all: ct eunit
+test-all: test-compile ct eunit
