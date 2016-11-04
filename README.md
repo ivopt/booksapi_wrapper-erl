@@ -1,5 +1,7 @@
 # Description
 
+[![Build Status](https://travis-ci.org/LynxEyes/booksapi_wrapper-erl.svg?branch=master)](https://travis-ci.org/LynxEyes/booksapi_wrapper-erl)
+
 A simple CLI app that retrieves book information details from Google Books API.
 The app is able to filter results by:
 
