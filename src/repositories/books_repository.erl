@@ -94,8 +94,11 @@ encode(none) -> "";
 encode(Term) when is_list(Term) -> http_uri:encode(Term).
 
 get_volumes(ItemMap) ->
-  Items = ?mget("items", ItemMap),
-  [ get_volume_details(?mget("volumeInfo",X)) || X <- Items].
+  case ?mget("totalItems", ItemMap) of
+    0 -> [];
+    _ -> Items = ?mget("items", ItemMap),
+         [ get_volume_details(?mget("volumeInfo",X)) || X <- Items]
+  end.
 
 get_volume_details(Volume) ->
   Title   = ?mget("title", Volume, ""),

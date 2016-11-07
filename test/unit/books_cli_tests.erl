@@ -3,16 +3,9 @@
 -define(_outputs(RegEx, Output), ?_assertMatch({match, _}, re:run(Output, RegEx)) ).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Run
+% Run with results
 
-run_test_() -> {
-  setup,
-  fun start/0,
-  fun stop/1,
-  fun run_tests/1
-}.
-
-start() ->
+start_mock_with_results() ->
   meck:new(mock_books_app, [non_strict]),
   meck:expect(mock_books_app, search, fun(_) -> [
     {<<"Book1">>, <<"2016-11-02">>, [<<"Author 1">>, <<"Author 2">>]},
@@ -21,13 +14,42 @@ start() ->
   ] end),
   mock_books_app.
 
-stop(Mock) ->
-  meck:unload(Mock).
 
-run_tests(Mock) -> [
-  { "Without arguments, outputs the usage message",
-    ?_outputs("^Usage: .*", books_cli:run([], {Mock}))},
+run_with_results_test_() -> {
+  setup,
+  fun start_mock_with_results/0,
+  fun unload_mock/1,
+  fun (Mock) -> [
+    { "Without arguments, outputs the usage message",
+      ?_outputs("^Usage: .*", books_cli:run([], {Mock}))},
 
-  { "Outputs and Indexes the books by the order in which the books app responded",
-    ?_outputs("1\\).*Book1(\\n.*)*.*2\\).*Book3(\\n.*)*.*3\\).*Book2", books_cli:run(["anything"], {Mock}))}
-].
+    { "Outputs and Indexes the books by the order in which the books app responded",
+      ?_outputs("1\\).*Book1(\\n.*)*.*2\\).*Book3(\\n.*)*.*3\\).*Book2", books_cli:run(["anything"], {Mock}))}
+  ]
+  end
+}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Run with no results
+
+start_mock_without_results() ->
+  meck:new(mock_books_app, [non_strict]),
+  meck:expect(mock_books_app, search, fun(_) -> [] end),
+  mock_books_app.
+
+run_without_results_test_() -> {
+  setup,
+  fun start_mock_without_results/0,
+  fun unload_mock/1,
+  fun (Mock) -> [
+    { "Outputs an error message",
+      ?_outputs("Your search criteria does match any book", books_cli:run(["giberishstuff"], {Mock}))}
+  ]
+  end
+}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Helpers
+
+unload_mock(Mock) -> meck:unload(Mock).

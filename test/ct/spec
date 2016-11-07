@@ -1,3 +1,4 @@
 {logdir, "./spec_out"}.
 
 {suites, "books_util", all}.
+{suites, "books_repository", all}.

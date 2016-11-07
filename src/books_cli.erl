@@ -21,7 +21,7 @@ run(Options, {App}) ->
 % print_books
 print_books(List) -> print_books(List, 1).
 
-print_books([], _) -> "";
+print_books([], _) -> "Your search criteria does match any book~n";
 print_books(BookList, Idx) ->
   {PrintedList, _} = lists:mapfoldl(fun fold_print_book/2, Idx, BookList),
   join("~n", PrintedList).

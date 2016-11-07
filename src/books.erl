@@ -23,7 +23,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OTP application behaviour API implementation
 start(_Type, _Args) ->
-  hackney:start(),
+  hackney:start(), % Not really happy about starting hackney here... but.. where??
   start_link().
 
 stop(_) -> ok.
