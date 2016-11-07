@@ -45,21 +45,17 @@ terminate(_,_) ->
 
 handle_call(Msg, _From, State = #{url:=Url}) ->
   case Msg of
-    {search, SearchTerm} ->
-      Response = search(SearchTerm, Url);
-    _ ->
-      Response = nothing
+    {search, SearchTerm} -> Response = search(SearchTerm, Url);
+    _                    -> Response = nothing
   end,
   {reply, Response, State}.
 
+% TODO - implement this...
 handle_cast(_, State) -> {noreply, State}.
 
-handle_info(_Msg, State) ->
-  io:format("Unexpected"),
-  {noreply, State}.
+handle_info(_Msg, State) -> {noreply, State}.
 
-code_change(_,_,_) -> ok.
-
+code_change(_,State,_) -> {ok, State}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Private

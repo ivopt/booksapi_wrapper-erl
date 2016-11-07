@@ -9,6 +9,11 @@ escriptize: compile
 clean:
 	@$(REBAR) clean
 
+dialyze:
+	@$(REBAR) compile
+	@$(REBAR) check-plt
+	@$(REBAR) dialyze
+
 test-shell:
 	@RUNENV=test $(REBAR) shell
 
