@@ -1,6 +1,8 @@
 -module(books_repository).
 -behaviour(gen_server).
+-include("../deps/dactyl/include/dactyl.hrl").
 -include("src/options.hrl").
+-include("src/book.hrl").
 
 % Macros to assist on getting string values from maps
 -define(mget(Key, Map), maps:get(list_to_binary(Key), Map)).
@@ -29,6 +31,7 @@ start(URL) ->
   ).
 
 %% Search books (by free term for now...)
+-spec search_books(options()) -> [book()].
 search_books(SearchTerm) ->
   gen_server:call(?MODULE, {search, SearchTerm}).
 
@@ -60,13 +63,14 @@ code_change(_,State,_) -> {ok, State}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Private
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-spec search(options(), #dactyl_template{}) -> [book()].
 search(#options{free_term=Term, author=Author, title=Title}, Template) ->
   % Build the URL
   Url = dactyl:render(Template, [
     {term,       encode(Term)},
-    {has_author, Author =/= none},
+    {has_author, Author =/= undefined},
     {author,     encode(Author)},
-    {has_title,  Title =/= none},
+    {has_title,  Title =/= undefined},
     {title,      encode(Title)}
   ]),
   % Fetch data
@@ -79,6 +83,7 @@ search(#options{free_term=Term, author=Author, title=Title}, Template) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Helpers
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-spec dactylize_url(string()) -> #dactyl_template{}.
 dactylize_url(URL) ->
   TermPartial   = "~term~;",
   AuthorPartial = "~has_author~?+inauthor:~author~;~:~;",
@@ -86,9 +91,11 @@ dactylize_url(URL) ->
   {ok, Template} = dactyl:compile(URL ++ TermPartial ++ AuthorPartial ++ TitlePartial),
   Template.
 
-encode(none) -> "";
+-spec encode(undefined|string()) -> string().
+encode(undefined) -> "";
 encode(Term) when is_list(Term) -> http_uri:encode(Term).
 
+-spec get_volumes(map()) -> [book()].
 get_volumes(ItemMap) ->
   case ?mget("totalItems", ItemMap) of
     0 -> [];
@@ -96,8 +103,9 @@ get_volumes(ItemMap) ->
          [ get_volume_details(?mget("volumeInfo",X)) || X <- Items]
   end.
 
+-spec get_volume_details(map()) -> book().
 get_volume_details(Volume) ->
   Title   = ?mget("title", Volume, ""),
   Date    = ?mget("publishedDate", Volume, ""),
   Authors = ?mget("authors", Volume, []),
-  {Title, Date, Authors}.
+  ?book(Title, Date, Authors).

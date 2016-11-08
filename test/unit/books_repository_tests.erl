@@ -1,5 +1,6 @@
 -module(books_repository_tests).
 -include("src/options.hrl").
+-include("src/book.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
 search_results_test_() -> {
@@ -26,5 +27,5 @@ search_results_tests({_, Results}) -> [
     ?_assertEqual(10, length(Results))},
 
   { "Search returns a list of tuples with 3 items: Title, Date and Authors List",
-    [?_assertMatch({T, D, A} when is_binary(T); is_binary(D); is_list(A), Row) || Row <- Results]}
+    [?_assertMatch(#book{}, Row) || Row <- Results]}
 ].

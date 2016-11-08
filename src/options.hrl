@@ -1,5 +1,7 @@
 -record(options, {
-  title = none,
-  author = none,
-  free_term = none
+  title :: string(),
+  author :: string(),
+  free_term :: string()
 }).
+
+-type options() :: #options{}.

@@ -1,12 +1,13 @@
 -module(books_cli).
 -include("src/options.hrl").
+-include("src/book.hrl").
 -import(books_util, [join/2]).
 
 -export([run/2]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Run
-
+-spec run([string()], tuple()) -> string().
 run([], _) -> print_usage();
 run(Options, {App}) ->
   case optparse(Options) of
@@ -19,6 +20,7 @@ run(Options, {App}) ->
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % print_books
+-spec print_books([book()]) -> string().
 print_books(List) -> print_books(List, 1).
 
 print_books([], _) -> "Your search criteria does match any book~n";
@@ -36,6 +38,8 @@ print_book({Title, Date, Authors}, Index) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optparse
 % CLI Options Parser (ruby inspired)
+-spec optparse([string()]) -> {search, options()}
+                            | {halt, string()}.
 optparse(List) -> optparse(List, #options{}).
 
 optparse(["-h" | _Rest], _State) -> {halt, print_usage()};
