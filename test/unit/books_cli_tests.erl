@@ -1,5 +1,7 @@
 -module(books_cli_tests).
 -include_lib("eunit/include/eunit.hrl").
+-include("src/book.hrl").
+
 -define(_outputs(RegEx, Output), ?_assertMatch({match, _}, re:run(Output, RegEx)) ).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -8,9 +10,9 @@
 start_mock_with_results() ->
   meck:new(mock_books_app, [non_strict]),
   meck:expect(mock_books_app, search, fun(_) -> [
-    {<<"Book1">>, <<"2016-11-02">>, [<<"Author 1">>, <<"Author 2">>]},
-    {<<"Book3">>, <<"2016-10-28">>, [<<"Author 2">>, <<"Author 3">>]},
-    {<<"Book2">>, <<"2016-11-01">>, [<<"Author 1">>, <<"Author 3">>]}
+    ?book(<<"Book1">>, <<"2016-11-02">>, [<<"Author 1">>, <<"Author 2">>]),
+    ?book(<<"Book3">>, <<"2016-10-28">>, [<<"Author 2">>, <<"Author 3">>]),
+    ?book(<<"Book2">>, <<"2016-11-01">>, [<<"Author 1">>, <<"Author 3">>])
   ] end),
   mock_books_app.
 

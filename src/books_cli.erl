@@ -23,6 +23,7 @@ run(Options, {App}) ->
 -spec print_books([book()]) -> string().
 print_books(List) -> print_books(List, 1).
 
+-spec print_books([book()], number()) -> string().
 print_books([], _) -> "Your search criteria does match any book~n";
 print_books(BookList, Idx) ->
   {PrintedList, _} = lists:mapfoldl(fun fold_print_book/2, Idx, BookList),
@@ -30,7 +31,8 @@ print_books(BookList, Idx) ->
 
 fold_print_book(Book, Idx) -> { print_book(Book, Idx), Idx + 1 }.
 
-print_book({Title, Date, Authors}, Index) ->
+-spec print_book(book(), number()) -> string().
+print_book(#book{title=Title, date=Date, authors=Authors}, Index) ->
   io_lib:format("~2w) Title: ~s~n"
                 "    Date: ~s~n"
                 "    Authors: ~s~n", [Index, Title, Date, join(", ", Authors)]).

@@ -26,6 +26,6 @@ search_results_tests({_, Results}) -> [
   { "Search returns a list of 10 elements",
     ?_assertEqual(10, length(Results))},
 
-  { "Search returns a list of tuples with 3 items: Title, Date and Authors List",
+  { "Search returns a list of books",
     [?_assertMatch(#book{}, Row) || Row <- Results]}
 ].
