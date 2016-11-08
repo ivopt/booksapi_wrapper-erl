@@ -7,8 +7,6 @@ sudo: false
 
 script:
   - make test-get-deps
-  - rebar build-plt
-  - make dialyze
   - make test-all
 
 notifications:
